@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 const BASE_URL = process.env.BASE_URL || "http://localhost";
 const PORT = process.env.PORT || "8080";
 
-export async function registerUser(email: string, password: string) {
+export async function registerUser(email: string, password: string, name: string) {
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new Error("User already exists");
@@ -19,7 +19,7 @@ export async function registerUser(email: string, password: string) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
-    data: { email, password: hashedPassword },
+    data: { email, password: hashedPassword , name },
   });
 
   return user;

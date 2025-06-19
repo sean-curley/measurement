@@ -4,10 +4,10 @@ import { registerUser, loginUser, generatePasswordReset, resetPassword } from ".
 const router = Router();
 
 router.post("/register", async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body;
 
   try {
-    const user = await registerUser(email, password);
+    const user = await registerUser(email, password, name);
     res.status(201).json({ message: "User created", userId: user.id });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
