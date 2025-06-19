@@ -47,7 +47,7 @@ router.post("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res:
 });
 
 /**
- * GET /api/data-points/:metricId?start=YYYY-MM-DD&end=YYYY-MM-DD
+ * GET /api/data-points/:metricId
  * Get all data points for a metric in a date range
  */
 router.get("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
