@@ -5,6 +5,7 @@ import {
   updateCustomMetric,
   getCustomMetricsForUser,
 } from "../services/custom-metric.service";
+import { deleteDataPointsForMetric } from "../services/data-point.service";
 import { authMiddleware, AuthenticatedRequest } from "../middleware/auth.middleware";
 
 const router = Router();
@@ -54,6 +55,7 @@ router.delete("/:id", authMiddleware, async (req: AuthenticatedRequest, res: Res
     if (isNaN(metricId)) throw new Error("Invalid metric ID");
 
     await deleteCustomMetric(metricId);
+    await deleteDataPointsForMetric(metricId); // Ensure data points are also deleted
     res.status(204).send();
   } catch (err) {
     console.error("Error deleting metric:", err);

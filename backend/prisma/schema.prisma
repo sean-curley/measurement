@@ -32,6 +32,17 @@ model CustomMetric {
   metricType String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  dataPoints   DataPoint[]
+}
+
+model DataPoint {
+  id           Int          @id @default(autoincrement())
+  metricId     Int
+  metric       CustomMetric @relation(fields: [metricId], references: [id])
+  metric_value Int
+  date         DateTime
+
+  @@unique([metricId, date]) 
 }
 
 
