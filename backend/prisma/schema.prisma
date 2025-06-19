@@ -21,5 +21,17 @@ model User {
   createdAt     DateTime @default(now())
   resetToken    String?  // Optional one-time token
   resetTokenExp DateTime? // Optional expiration
+  metrics       CustomMetric[]
 }
+
+model CustomMetric {
+  id         Int      @id @default(autoincrement()) // Numeric primary key
+  userId     String                                    // Foreign key to User
+  user       User     @relation(fields: [userId], references: [id]) // Relation
+  name       String
+  metricType String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 
