@@ -14,12 +14,9 @@ import Constants from 'expo-constants';
 
 const backendBaseUrl = Constants.expoConfig?.extra?.BACKEND_BASE_URL ?? 'http://0.0.0.0:8080';;
 
-
 const LoginPage = () => {
   console.log('LoginPage rendered');
   const { login } = useAuth();
-
-  
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +30,7 @@ const LoginPage = () => {
         return;
       }
       const url = `${backendBaseUrl}/api/auth/login`
+      console.log('Logging in with URL:', url);
       const body = JSON.stringify({ email, password });
       const res = await fetch(url, {
         method: 'POST',

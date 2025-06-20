@@ -15,15 +15,15 @@ const transporter = nodemailer.createTransport({
   debug: true,
 });
 
-export async function sendResetEmail(to: string, resetLink: string) {
+export async function sendResetEmail(to: string, resetToken: string) {
   const info = await transporter.sendMail({
     from: MAIL_FROM,
     to,
     subject: `${APP_NAME} – Reset your password`,
     html: `
       <h2>${APP_NAME} Password Reset</h2>
-      <p>Click below to reset your password:</p>
-      <a href="${resetLink}">${resetLink}</a>
+      <p>Enter the following code in ${APP_NAME}:</p>
+      <h3>${resetToken}</h3>
     `,
   });
 

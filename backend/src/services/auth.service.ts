@@ -45,7 +45,7 @@ export async function generatePasswordReset(email: string) {
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) throw new Error("User not found");
 
-  const token = crypto.randomBytes(32).toString("hex");
+  const token = crypto.randomBytes(4).toString("hex").toUpperCase();
   const expiry = addHours(new Date(), 1);
 
   await prisma.user.update({
@@ -53,12 +53,12 @@ export async function generatePasswordReset(email: string) {
     data: { resetToken: token, resetTokenExp: expiry },
   });
 
-  const resetUrl = `${BASE_URL}:${PORT}/reset-password?token=${token}`;
-  await sendResetEmail(email, resetUrl);
+  await sendResetEmail(email, token);
 }
 
 export async function resetPassword(token: string, newPassword: string) {
-  const user = await prisma.user.findFirst({ where: { resetToken: token } });
+  const user = await prisma.user.findFirst({ where: { resetToken: token.toUpperCase() } });
+  console.log("token:", token, "user:", user, "newPassword:", newPassword);
 
   if (!user || !user.resetTokenExp || isAfter(new Date(), user.resetTokenExp)) {
     throw new Error("Invalid or expired token");
