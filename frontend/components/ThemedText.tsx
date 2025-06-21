@@ -1,11 +1,14 @@
-import { StyleSheet, Text, type TextProps } from 'react-native';
-
+import React from 'react';
+import { StyleSheet, TextStyle } from 'react-native';
+import { Text as PaperText } from 'react-native-paper';
+import type { TextProps as RNTextProps } from 'react-native';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-export type ThemedTextProps = TextProps & {
+export type ThemedTextProps = RNTextProps & {
   lightColor?: string;
   darkColor?: string;
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
+  children: React.ReactNode; // ✅ children now required
 };
 
 export function ThemedText({
@@ -13,23 +16,26 @@ export function ThemedText({
   lightColor,
   darkColor,
   type = 'default',
+  children,
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
-    <Text
+    <PaperText
       style={[
         { color },
         type === 'default' ? styles.default : undefined,
-        type === 'title' ? styles.title : undefined,
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
+        type === 'title' ? styles.title : undefined,
         type === 'subtitle' ? styles.subtitle : undefined,
         type === 'link' ? styles.link : undefined,
         style,
       ]}
       {...rest}
-    />
+    >
+      {children}
+    </PaperText>
   );
 }
 

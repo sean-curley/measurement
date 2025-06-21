@@ -3,9 +3,10 @@ import { authMiddleware, AuthenticatedRequest } from "../middleware/auth.middlew
 import {
   createDataPointForMetric,
   getDataPointsForMetricInRange,
+  importMetricCsv,
 } from "../services/data-point.service";
 import { getCustomMetricById } from "../services/custom-metric.service"; // for ownership check
-
+import path from 'path';
 const router = Router();
 
 /**
@@ -45,14 +46,13 @@ router.post("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res:
     res.status(500).json({ error: "Failed to create data point" });
   }
 });
-
 /**
- * GET /api/data-points/:metricId
+ * GET /api/data-points/:metricId?start=YYYY-MM-DD&end=YYYY-MM-DD
  * Get all data points for a metric in a date range
  */
 router.get("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   const metricId = Number(req.params.metricId);
-  const { start, end } = req.body;
+  const { start, end } = req.query;
 
   if (isNaN(metricId) || !start || !end) {
     throw new Error("Metric ID, start, and end dates are required");
@@ -66,10 +66,9 @@ router.get("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res: 
   }
 
   try {
-    // Ownership check
     const metric = await getCustomMetricById(metricId);
     if (!metric || metric.userId !== req.userId) {
-        throw new Error("Access denied");
+      throw new Error("Access denied");
     }
 
     const dataPoints = await getDataPointsForMetricInRange({

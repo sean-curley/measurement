@@ -1,8 +1,9 @@
-import { StyleSheet, TextInput, type TextInputProps } from 'react-native';
-
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { TextInput as PaperTextInput, TextInputProps as PaperTextInputProps } from 'react-native-paper';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
-export type ThemedInputProps = TextInputProps & {
+export type ThemedInputProps = PaperTextInputProps & {
   lightColor?: string;
   darkColor?: string;
   type?: 'default';
@@ -15,12 +16,13 @@ export function ThemedInput({
   type = 'default',
   ...rest
 }: ThemedInputProps) {
-  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return (
-    <TextInput
+    <PaperTextInput
+      mode="outlined"
       style={[
-        { color },
+        { backgroundColor },
         type === 'default' ? styles.default : undefined,
         style,
       ]}
@@ -31,11 +33,6 @@ export function ThemedInput({
 
 const styles = StyleSheet.create({
   default: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
     marginBottom: 16,
-    paddingHorizontal: 12,
-    borderRadius: 8,
   },
 });
