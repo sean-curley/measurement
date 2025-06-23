@@ -4,9 +4,11 @@ import {
   createDataPointForMetric,
   getDataPointsForMetricInRange,
   importMetricCsv,
+  getDataPointsForMetricInTimeframe
 } from "../services/data-point.service";
 import { getCustomMetricById } from "../services/custom-metric.service"; // for ownership check
 import path from 'path';
+
 const router = Router();
 
 /**
@@ -83,5 +85,37 @@ router.get("/:metricId", authMiddleware, async (req: AuthenticatedRequest, res: 
     res.status(500).json({ error: "Failed to fetch data points" });
   }
 });
+
+/**
+ * GET /api/data-points/:metricId/summary?timeframe=1M&formula=avg
+ * Returns grouped/aggregated data points using a formula and timeframe
+ */
+router.get("/:metricId/summary", authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+  const metricId = Number(req.params.metricId);
+  const { timeframe, formula } = req.query;
+
+  if (isNaN(metricId) || typeof timeframe !== "string" || typeof formula !== "string") {
+    throw new Error("Invalid metric ID, timeframe, or formula");
+  }
+
+  try {
+    const metric = await getCustomMetricById(metricId);
+    if (!metric || metric.userId !== req.userId) {
+      throw new Error("Access denied");
+    }
+
+    const summary = await getDataPointsForMetricInTimeframe({
+      metricId,
+      timeframe: timeframe as any,
+      formula: formula as any,
+    });
+
+    res.json(summary);
+  } catch (err) {
+    console.error("Error fetching summarized data points:", err);
+    res.status(500).json({ error: "Failed to fetch summarized data" });
+  }
+});
+
 
 export default router;

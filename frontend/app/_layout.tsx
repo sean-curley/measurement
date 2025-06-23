@@ -28,7 +28,7 @@ function AppInnerLayout() {
         <Stack.Screen name="register" options={{ presentation: 'modal' }}/>
         <Stack.Screen name="forgot-password" />
         <Stack.Screen name="tabs" />
-        <Stack.Screen name="custom-metric/[id]" options={{ presentation: 'modal' }}/>
+        <Stack.Screen name="custom-metric/[id]"/>
       </Stack>
     </ThemeProvider>
   );
