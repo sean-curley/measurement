@@ -37,7 +37,8 @@ export async function createDataPointForMetric(params: {
 }) {
   const { metricId, metricValue, date = new Date() } = params;
 
-  const roundedDate = addDays(roundToStartOfDay(date), 1); 
+  // Normalize to 00:00 to avoid duplicating entries across timezones
+  const roundedDate = roundToStartOfDay(date);
 
   return await prisma.dataPoint.upsert({
     where: {
