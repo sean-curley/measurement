@@ -23,7 +23,7 @@ import {
 /**
  * Rounds a JS Date to the start of the day (00:00:00)
  */
-function roundToStartOfDay(date: Date): Date {
+export function roundToStartOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
@@ -60,7 +60,7 @@ export async function createDataPointForMetric(params: {
 type Timeframe = "1W" | "1M" | "3M" | "6M" | "1Y" | "ALL";
 type Formula = "sum" | "avg" | `>${number}` | `%>${number}`;
 
-function parseThreshold(formula: string): number {
+export function parseThreshold(formula: string): number {
   return parseFloat(formula.replace(/[^\d.]/g, ""));
 }
 
